@@ -15,27 +15,14 @@ from sklearn.metrics import (
 )
 from sklearn.ensemble import GradientBoostingClassifier
 
-
-# ============================================================
-# FILE NAMES
-# ============================================================
-
 TRAIN_FILE = "event_attendance_real_world.xlsx"
 TEST_FILE = "event_attendance_test_real_world.xlsx"
 OUTPUT_FILE = "attendance_predictions.xlsx"
 
 
-# ============================================================
-# DATA CLEANING FUNCTION
-# ============================================================
-
 def clean_data(df, has_target=False):
 
     data = df.copy()
-
-    # --------------------------------------------------------
-    # Clean categorical text columns
-    # --------------------------------------------------------
 
     categorical_columns = [
         "event_type",
@@ -50,10 +37,6 @@ def clean_data(df, has_target=False):
                 if isinstance(value, str)
                 else np.nan
         )
-
-    # --------------------------------------------------------
-    # Convert event_time into numeric event_hour
-    # --------------------------------------------------------
 
     def extract_hour(value):
 
@@ -70,12 +53,8 @@ def clean_data(df, has_target=False):
 
     data["event_hour"] = data["event_time"].apply(extract_hour)
 
-    # Remove original event_time column
     data = data.drop(columns=["event_time"])
 
-    # --------------------------------------------------------
-    # Fix inconsistent previous event values
-    # --------------------------------------------------------
 
     data["previous_events_registered"] = data[
         [
@@ -84,9 +63,6 @@ def clean_data(df, has_target=False):
         ]
     ].max(axis=1)
 
-    # --------------------------------------------------------
-    # Create previous attendance rate feature
-    # --------------------------------------------------------
 
     data["previous_attendance_rate"] = (
         data["previous_events_attended"]
@@ -98,13 +74,9 @@ def clean_data(df, has_target=False):
         data["previous_attendance_rate"].clip(0, 1)
     )
 
-    # --------------------------------------------------------
-    # Handle target column
-    # --------------------------------------------------------
 
     if has_target:
 
-        # Remove rows where attendance result is missing
         data = data[data["attended"].notna()].copy()
 
         y = data["attended"].astype(int)
@@ -116,10 +88,6 @@ def clean_data(df, has_target=False):
     return data
 
 
-# ============================================================
-# LOAD EXCEL FILES
-# ============================================================
-
 print("\nLoading datasets...")
 
 train_df = pd.read_excel(TRAIN_FILE)
@@ -128,10 +96,6 @@ test_df = pd.read_excel(TEST_FILE)
 print("Training dataset shape:", train_df.shape)
 print("Test dataset shape:", test_df.shape)
 
-
-# ============================================================
-# CLEAN DATA
-# ============================================================
 
 X, y = clean_data(
     train_df,
@@ -151,17 +115,9 @@ X_test = clean_data(
 student_ids = X_test["student_id"].copy()
 
 
-# ============================================================
-# REMOVE STUDENT ID FROM MODEL FEATURES
-# ============================================================
-
 X = X.drop(columns=["student_id"])
 X_test = X_test.drop(columns=["student_id"])
 
-
-# ============================================================
-# DEFINE FEATURES EXPLICITLY
-# ============================================================
 
 categorical_features = [
     "event_type",
@@ -179,10 +135,6 @@ numeric_features = [
 ]
 
 
-# ============================================================
-# OPTIONAL DEBUG CHECK
-# ============================================================
-
 print("\nCategorical features:")
 print(categorical_features)
 
@@ -193,10 +145,6 @@ print("\nTraining column data types:")
 print(X.dtypes)
 
 
-# ============================================================
-# NUMERIC PREPROCESSING
-# ============================================================
-
 numeric_pipeline = Pipeline([
     (
         "imputer",
@@ -204,10 +152,6 @@ numeric_pipeline = Pipeline([
     )
 ])
 
-
-# ============================================================
-# CATEGORICAL PREPROCESSING
-# ============================================================
 
 categorical_pipeline = Pipeline([
     (
@@ -223,11 +167,6 @@ categorical_pipeline = Pipeline([
     )
 ])
 
-
-# ============================================================
-# COMBINE PREPROCESSING
-# ============================================================
-
 preprocessor = ColumnTransformer([
     (
         "numeric",
@@ -241,10 +180,6 @@ preprocessor = ColumnTransformer([
     )
 ])
 
-
-# ============================================================
-# CREATE MODEL
-# ============================================================
 
 model = Pipeline([
     (
@@ -263,9 +198,6 @@ model = Pipeline([
 ])
 
 
-# ============================================================
-# TRAIN / VALIDATION SPLIT
-# ============================================================
 
 X_train, X_val, y_train, y_val = train_test_split(
     X,
@@ -274,11 +206,6 @@ X_train, X_val, y_train, y_val = train_test_split(
     random_state=42,
     stratify=y
 )
-
-
-# ============================================================
-# TRAIN MODEL
-# ============================================================
 
 print("\nTraining model...")
 
@@ -289,21 +216,12 @@ model.fit(
 
 print("Training complete.")
 
-
-# ============================================================
-# VALIDATION PREDICTIONS
-# ============================================================
-
 val_predictions = model.predict(X_val)
 
 val_probabilities = model.predict_proba(
     X_val
 )[:, 1]
 
-
-# ============================================================
-# MODEL EVALUATION
-# ============================================================
 
 precision = precision_score(
     y_val,
@@ -343,11 +261,6 @@ print(f"ROC-AUC   : {roc_auc:.4f}")
 print("\nConfusion Matrix:")
 print(cm)
 
-
-# ============================================================
-# TRAIN FINAL MODEL USING ALL TRAINING DATA
-# ============================================================
-
 print("\nTraining final model on full dataset...")
 
 model.fit(
@@ -358,10 +271,6 @@ model.fit(
 print("Final model training complete.")
 
 
-# ============================================================
-# TEST DATA PREDICTIONS
-# ============================================================
-
 print("\nGenerating test predictions...")
 
 probabilities = model.predict_proba(
@@ -371,11 +280,6 @@ probabilities = model.predict_proba(
 predictions = (
     probabilities >= 0.5
 ).astype(int)
-
-
-# ============================================================
-# CREATE RESULTS TABLE
-# ============================================================
 
 results = test_df.copy()
 
@@ -393,20 +297,11 @@ results["prediction_label"] = np.where(
     "Unlikely to Attend"
 )
 
-
-# ============================================================
-# SAVE TO EXCEL
-# ============================================================
-
 results.to_excel(
     OUTPUT_FILE,
     index=False
 )
 
-
-# ============================================================
-# DISPLAY PREDICTIONS
-# ============================================================
 
 print("\n====================================")
 print("ATTENDANCE PREDICTIONS")
