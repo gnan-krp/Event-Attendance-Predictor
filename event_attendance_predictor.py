@@ -19,6 +19,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 TRAIN_FILE = "event_attendance_real_world.xlsx"
 TEST_FILE = "event_attendance_test_real_world.xlsx"
 OUTPUT_FILE = "attendance_predictions.xlsx"
+MODEL_FILE = "attendance_model.pkl"
 
 
 def clean_data(df, has_target=False):
@@ -56,14 +57,12 @@ def clean_data(df, has_target=False):
 
     data = data.drop(columns=["event_time"])
 
-
     data["previous_events_registered"] = data[
         [
             "previous_events_registered",
             "previous_events_attended"
         ]
     ].max(axis=1)
-
 
     data["previous_attendance_rate"] = (
         data["previous_events_attended"]
@@ -75,10 +74,11 @@ def clean_data(df, has_target=False):
         data["previous_attendance_rate"].clip(0, 1)
     )
 
-
     if has_target:
 
-        data = data[data["attended"].notna()].copy()
+        data = data[
+            data["attended"].notna()
+        ].copy()
 
         y = data["attended"].astype(int)
 
@@ -97,7 +97,6 @@ test_df = pd.read_excel(TEST_FILE)
 print("Training dataset shape:", train_df.shape)
 print("Test dataset shape:", test_df.shape)
 
-
 X, y = clean_data(
     train_df,
     has_target=True
@@ -110,10 +109,8 @@ X_test = clean_data(
 
 student_ids = X_test["student_id"].copy()
 
-
 X = X.drop(columns=["student_id"])
 X_test = X_test.drop(columns=["student_id"])
-
 
 categorical_features = [
     "event_type",
@@ -130,16 +127,11 @@ numeric_features = [
     "previous_attendance_rate"
 ]
 
-
 print("\nCategorical features:")
 print(categorical_features)
 
 print("\nNumeric features:")
 print(numeric_features)
-
-print("\nTraining column data types:")
-print(X.dtypes)
-
 
 numeric_pipeline = Pipeline([
     (
@@ -147,7 +139,6 @@ numeric_pipeline = Pipeline([
         SimpleImputer(strategy="median")
     )
 ])
-
 
 categorical_pipeline = Pipeline([
     (
@@ -176,7 +167,6 @@ preprocessor = ColumnTransformer([
     )
 ])
 
-
 model = Pipeline([
     (
         "preprocessor",
@@ -193,8 +183,6 @@ model = Pipeline([
     )
 ])
 
-
-
 X_train, X_val, y_train, y_val = train_test_split(
     X,
     y,
@@ -203,7 +191,7 @@ X_train, X_val, y_train, y_val = train_test_split(
     stratify=y
 )
 
-print("\nTraining model...")
+print("\nTraining validation model...")
 
 model.fit(
     X_train,
@@ -217,7 +205,6 @@ val_predictions = model.predict(X_val)
 val_probabilities = model.predict_proba(
     X_val
 )[:, 1]
-
 
 precision = precision_score(
     y_val,
@@ -244,7 +231,6 @@ cm = confusion_matrix(
     val_predictions
 )
 
-
 print("\n====================================")
 print("MODEL EVALUATION")
 print("====================================")
@@ -266,6 +252,12 @@ model.fit(
 
 print("Final model training complete.")
 
+joblib.dump(
+    model,
+    MODEL_FILE
+)
+
+print(f"Model saved as {MODEL_FILE}")
 
 print("\nGenerating test predictions...")
 
@@ -274,7 +266,7 @@ probabilities = model.predict_proba(
 )[:, 1]
 
 predictions = (
-    probabilities >= 0.5
+    probabilities >= 0.50
 ).astype(int)
 
 results = test_df.copy()
@@ -298,7 +290,6 @@ results.to_excel(
     index=False
 )
 
-
 print("\n====================================")
 print("ATTENDANCE PREDICTIONS")
 print("====================================")
@@ -313,9 +304,9 @@ print(
     ].to_string(index=False)
 )
 
-
 print("\n====================================")
 print("DONE")
 print("====================================")
 
 print(f"Predictions saved to: {OUTPUT_FILE}")
+print(f"Trained model saved to: {MODEL_FILE}")
