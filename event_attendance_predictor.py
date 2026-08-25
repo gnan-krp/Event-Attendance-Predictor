@@ -127,12 +127,6 @@ numeric_features = [
     "previous_attendance_rate"
 ]
 
-print("\nCategorical features:")
-print(categorical_features)
-
-print("\nNumeric features:")
-print(numeric_features)
-
 numeric_pipeline = Pipeline([
     (
         "imputer",
@@ -197,8 +191,6 @@ model.fit(
     X_train,
     y_train
 )
-
-print("Training complete.")
 
 val_predictions = model.predict(X_val)
 
