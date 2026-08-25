@@ -4,8 +4,8 @@
 
 Every club faces the same problem.
 
-You announce an event.
-100 students register. 🎉
+You announce an event.  
+100 students register. 🎉  
 You prepare everything expecting 100 people...
 
 ...and then only 60 actually show up. 😭
@@ -16,7 +16,7 @@ This project uses historical event registration data to predict how likely a stu
 
 ---
 
-## 🚀 What Does This Project Do?
+# 🚀 What Does This Project Do?
 
 The **Event Attendance Predictor** is a binary classification Machine Learning model that analyzes different factors related to a student's registration and estimates their probability of attending the event.
 
@@ -36,6 +36,8 @@ the model gives a probability:
 
 This could help clubs estimate actual turnout and plan events more efficiently.
 
+I also created an interactive **Streamlit application** where registration details can be entered manually and the trained model generates an attendance probability instantly. 🎨
+
 ---
 
 # 💡 Why This Project?
@@ -46,13 +48,13 @@ A club may receive **200 registrations**, but that doesn't necessarily mean 200 
 
 This creates problems while planning:
 
-* 🍕 Food and refreshments
-* 🪑 Seating arrangements
-* 🏫 Venue capacity
-* 🎁 Swag and goodies
-* 👥 Volunteer requirements
-* 💰 Event budget
-* 📢 Reminder campaigns
+- 🍕 Food and refreshments
+- 🪑 Seating arrangements
+- 🏫 Venue capacity
+- 🎁 Swag and goodies
+- 👥 Volunteer requirements
+- 💰 Event budget
+- 📢 Reminder campaigns
 
 Instead of assuming:
 
@@ -94,7 +96,7 @@ attended
 
 while the test dataset does not.
 
-That's exactly what our model needs to predict. 🎯
+That's exactly what the model needs to predict. 🎯
 
 ---
 
@@ -102,16 +104,16 @@ That's exactly what our model needs to predict. 🎯
 
 The model uses several pieces of information about each registration.
 
-| Feature                         | What it represents                                    |
-| ------------------------------- | ----------------------------------------------------- |
-| 🎟️ `event_type`                | Type of event such as workshop, hackathon, talk, etc. |
-| 📅 `registration_days_before`   | How early the student registered                      |
-| 🔢 `previous_events_registered` | Number of previous events registered for              |
-| ✅ `previous_events_attended`    | Number of previous events actually attended           |
-| 👥 `club_member`                | Whether the student is already a club member          |
-| 🗓️ `event_day`                 | Day on which the event is happening                   |
-| 🕐 `event_time`                 | Time of the event                                     |
-| 📍 `travel_distance_km`         | Approximate travel distance to the event              |
+| Feature | What it represents |
+|---|---|
+| 🎟️ `event_type` | Type of event such as workshop, hackathon, talk, etc. |
+| 📅 `registration_days_before` | How early the student registered |
+| 🔢 `previous_events_registered` | Number of previous events registered for |
+| ✅ `previous_events_attended` | Number of previous events actually attended |
+| 👥 `club_member` | Whether the student is already a club member |
+| 🗓️ `event_day` | Day on which the event is happening |
+| 🕐 `event_time` | Time of the event |
+| 📍 `travel_distance_km` | Approximate travel distance to the event |
 
 The training dataset additionally contains:
 
@@ -119,7 +121,7 @@ The training dataset additionally contains:
 attended
 ```
 
-which is our **target variable**.
+which is the **target variable**.
 
 ---
 
@@ -129,7 +131,7 @@ Real-world data is rarely perfectly clean.
 
 Before training the model, I handled several issues in the dataset.
 
-### 🔤 Inconsistent categorical values
+### 🔤 Inconsistent Categorical Values
 
 Values such as:
 
@@ -240,7 +242,7 @@ Example:
             ↓
            0.80
             ↓
-     80% attendance rate
+      80% attendance rate
 ```
 
 ---
@@ -291,14 +293,14 @@ The overall flow looks like this:
 
 ```text
                 📊 Raw Registration Data
-                           │
-                           ▼
+                          │
+                          ▼
                     🧹 Data Cleaning
-                           │
-                           ▼
+                          │
+                          ▼
                    🛠️ Feature Engineering
-                           │
-                           ▼
+                          │
+                          ▼
               ┌────────────────────────┐
               │     Preprocessing      │
               └────────────────────────┘
@@ -310,7 +312,7 @@ The overall flow looks like this:
                  Imputer        Imputer
                                   │
                                   ▼
-                           One-Hot Encoding
+                            One-Hot Encoding
                     │            │
                     └──────┬─────┘
                            ▼
@@ -398,20 +400,20 @@ The validation portion contains data the model did **not see during training**, 
 
 I evaluated the model using:
 
-* 🎯 Precision
-* 🔎 Recall
-* ⚖️ F1-score
-* 📈 ROC-AUC
-* 🔢 Confusion Matrix
+- 🎯 Precision
+- 🔎 Recall
+- ⚖️ F1-score
+- 📈 ROC-AUC
+- 🔢 Confusion Matrix
 
 The validation results were:
 
-| Metric           |      Score |
-| ---------------- | ---------: |
+| Metric | Score |
+|---|---:|
 | 🎯 **Precision** | **72.46%** |
-| 🔎 **Recall**    | **78.12%** |
-| ⚖️ **F1-score**  | **75.19%** |
-| 📈 **ROC-AUC**   | **68.83%** |
+| 🔎 **Recall** | **78.12%** |
+| ⚖️ **F1-score** | **75.19%** |
+| 📈 **ROC-AUC** | **68.83%** |
 
 ---
 
@@ -421,15 +423,11 @@ The validation results were:
 
 Of all the students predicted to attend, approximately **72% actually attended** in the validation data.
 
----
-
 ### 🔎 Recall — 78.12%
 
 Of all the students who actually attended, the model successfully identified approximately **78% of them**.
 
 For this project, recall is particularly useful because we want to identify as many potential attendees as possible.
-
----
 
 ### ⚖️ F1-score — 75.19%
 
@@ -450,12 +448,12 @@ The model produced:
 
 Which means:
 
-|                   | Count |
-| ----------------- | ----: |
-| ✅ True Positive   |    50 |
-| ✅ True Negative   |    18 |
-| ⚠️ False Positive |    19 |
-| ⚠️ False Negative |    14 |
+| | Count |
+|---|---:|
+| ✅ True Positive | 50 |
+| ✅ True Negative | 18 |
+| ⚠️ False Positive | 19 |
+| ⚠️ False Negative | 14 |
 
 So the model correctly identified **50 actual attendees** in the validation set.
 
@@ -503,21 +501,100 @@ The threshold could also be adjusted depending on what the club wants to priorit
 
 Some predictions generated by the model:
 
-| Student | Attendance Probability | Prediction            |
-| ------- | ---------------------: | --------------------- |
-| S1015   |           🔥 **96.2%** | 🟢 Likely to Attend   |
-| S1055   |              **92.7%** | 🟢 Likely to Attend   |
-| S1475   |              **90.8%** | 🟢 Likely to Attend   |
-| S1379   |              **88.5%** | 🟢 Likely to Attend   |
-| S1273   |              **29.0%** | 🔴 Unlikely to Attend |
-| S1422   |              **15.0%** | 🔴 Unlikely to Attend |
-| S1278   |              **13.0%** | 🔴 Unlikely to Attend |
+| Student | Attendance Probability | Prediction |
+|---|---:|---|
+| S1015 | 🔥 **96.2%** | 🟢 Likely to Attend |
+| S1055 | **92.7%** | 🟢 Likely to Attend |
+| S1475 | **90.8%** | 🟢 Likely to Attend |
+| S1379 | **88.5%** | 🟢 Likely to Attend |
+| S1273 | **29.0%** | 🔴 Unlikely to Attend |
+| S1422 | **15.0%** | 🔴 Unlikely to Attend |
+| S1278 | **13.0%** | 🔴 Unlikely to Attend |
 
 The final predictions are saved automatically to:
 
 ```text
 attendance_predictions.xlsx
 ```
+
+---
+
+# 🎨 Interactive Streamlit App
+
+I also wanted to make the model easier to actually use instead of only running predictions through Python.
+
+So I built a small **Streamlit interface**. 🚀
+
+The user can enter:
+
+```text
+🎟️ Event Type
+📅 Registration Timing
+📝 Previous Events Registered
+✅ Previous Events Attended
+👥 Club Membership
+🗓️ Event Day
+🕐 Event Hour
+📍 Travel Distance
+```
+
+and then click:
+
+```text
+🚀 Predict Attendance
+```
+
+The application passes those values to the trained Machine Learning pipeline and generates the student's estimated attendance probability.
+
+The basic flow is:
+
+```text
+        👤 Student Registration Details
+                     │
+                     ▼
+              🎨 Streamlit App
+                     │
+                     ▼
+          🤖 Saved Trained Model
+                     │
+                     ▼
+           📊 Attendance Probability
+                     │
+             ┌───────┴───────┐
+             ▼               ▼
+      🟢 Likely          🔴 No-Show Risk
+```
+
+The app also shows a visual probability bar and a quick interpretation of the prediction.
+
+---
+
+# 💾 Saving the Trained Model
+
+After validation, the model is trained again using the complete training dataset.
+
+The complete Scikit-learn pipeline is then saved using **Joblib**:
+
+```python
+joblib.dump(
+    model,
+    "attendance_model.pkl"
+)
+```
+
+This creates:
+
+```text
+attendance_model.pkl
+```
+
+The Streamlit application loads this model using:
+
+```python
+model = joblib.load("attendance_model.pkl")
+```
+
+This means the app doesn't need to retrain the model every time someone wants to make a prediction.
 
 ---
 
@@ -531,11 +608,11 @@ Analyzing historical attendance also revealed some interesting patterns. 👀
 
 Students registering earlier were noticeably more likely to attend.
 
-| Registration Time   | Attendance |
-| ------------------- | ---------: |
-| 🔴 0–2 days before  |  **46.2%** |
-| 🟡 3–7 days before  |  **58.4%** |
-| 🟢 8–14 days before |  **72.8%** |
+| Registration Time | Attendance |
+|---|---:|
+| 🔴 0–2 days before | **46.2%** |
+| 🟡 3–7 days before | **58.4%** |
+| 🟢 8–14 days before | **72.8%** |
 
 ### 💡 Possible Action
 
@@ -577,13 +654,13 @@ Non-members could receive additional engagement after registering:
 
 Event format also showed an interesting pattern.
 
-| Event            | Attendance |
-| ---------------- | ---------: |
-| 🛠️ **Workshop** |  **75.4%** |
-| 🎤 Talk          |  **66.0%** |
-| 🏆 Competition   |  **58.5%** |
-| 💻 Hackathon     |  **52.9%** |
-| 🎉 Social        |  **52.6%** |
+| Event | Attendance |
+|---|---:|
+| 🛠️ **Workshop** | **75.4%** |
+| 🎤 Talk | **66.0%** |
+| 🏆 Competition | **58.5%** |
+| 💻 Hackathon | **52.9%** |
+| 🎉 Social | **52.6%** |
 
 Hands-on workshops had the highest observed attendance.
 
@@ -618,6 +695,10 @@ Event-Attendance-Predictor/
 │
 ├── 📄 event_attendance_predictor.py
 │
+├── 🎨 app.py
+│
+├── 🤖 attendance_model.pkl
+│
 ├── 📊 event_attendance_real_world.xlsx
 │
 ├── 🧪 event_attendance_test_real_world.xlsx
@@ -632,7 +713,7 @@ Event-Attendance-Predictor/
 
 # 💻 How to Run the Project
 
-### 1️⃣ Clone the repository
+## 1️⃣ Clone the Repository
 
 ```bash
 git clone https://github.com/gnan-krp/Event-Attendance-Predictor.git
@@ -646,7 +727,7 @@ cd Event-Attendance-Predictor
 
 ---
 
-### 2️⃣ Create a Virtual Environment
+## 2️⃣ Create a Virtual Environment
 
 ```bash
 python3 -m venv venv
@@ -658,23 +739,31 @@ Activate it on macOS/Linux:
 source venv/bin/activate
 ```
 
----
-
-### 3️⃣ Install Dependencies
+On Windows:
 
 ```bash
-pip install pandas numpy scikit-learn openpyxl
+venv\Scripts\activate
 ```
 
 ---
 
-### 4️⃣ Run 🚀
+## 3️⃣ Install Dependencies
+
+```bash
+pip install pandas numpy scikit-learn openpyxl streamlit joblib
+```
+
+---
+
+## 4️⃣ Train the Model 🚀
+
+Run:
 
 ```bash
 python3 event_attendance_predictor.py
 ```
 
-The model will:
+The program will:
 
 ```text
 📂 Load datasets
@@ -687,9 +776,48 @@ The model will:
        ↓
 📏 Evaluate the model
        ↓
+🧠 Train final model
+       ↓
+💾 Save attendance_model.pkl
+       ↓
 🎯 Generate probabilities
        ↓
 📊 Save predictions
+```
+
+After running successfully, two important files are generated:
+
+```text
+attendance_model.pkl
+attendance_predictions.xlsx
+```
+
+---
+
+# 🎨 Run the Streamlit App
+
+After the trained model is available, run:
+
+```bash
+streamlit run app.py
+```
+
+Streamlit will start a local server and open the application in your browser.
+
+You can then enter student and event information and click:
+
+```text
+🚀 Predict Attendance
+```
+
+to receive an estimated attendance probability.
+
+The Streamlit application currently runs **locally**, so no online deployment is required.
+
+To stop the Streamlit server:
+
+```text
+Control + C
 ```
 
 ---
@@ -725,6 +853,14 @@ Model Evaluation
 
 Used by Pandas for reading and writing Excel files.
 
+### 🎨 Streamlit
+
+Used to build the interactive interface where users can enter registration details and receive attendance predictions.
+
+### 💾 Joblib
+
+Used to save and load the complete trained Machine Learning pipeline.
+
 ---
 
 # 🚧 Limitations
@@ -756,7 +892,7 @@ and not as guaranteed outcomes.
 
 There are a lot of directions in which this project could be extended.
 
-### 🌦️ Add external factors
+### 🌦️ Add External Factors
 
 Features such as:
 
@@ -785,7 +921,7 @@ Instead of treating everyone equally:
 
 ### 📊 Club Dashboard
 
-A dashboard could show:
+The Streamlit application could eventually be expanded into a complete club dashboard:
 
 ```text
 Registrations:            150
@@ -808,6 +944,12 @@ LightGBM
 ```
 
 and tune their hyperparameters.
+
+### 🌐 Online Deployment
+
+The Streamlit application currently runs locally.
+
+A future version could be deployed online so club organizers can access the predictor directly through a browser.
 
 ---
 
